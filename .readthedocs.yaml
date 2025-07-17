@@ -14,11 +14,7 @@ build:
 
 python:
    install:
-    - method: pip
-      path: .
-      extra_requirements:
-      - sphinx
-      - jupyter-book
+    - requirements: requirements.txt
 
 sphinx:
   configuration: docs/conf.py
