@@ -1,0 +1,10 @@
+{attribute 'qualified_only'}
+{attribute 'strict'}
+TYPE ModbusState_Type :
+(
+	Idle,
+	StartOperation,
+	WaitForCompletion,
+	ErrorState
+);
+END_TYPE

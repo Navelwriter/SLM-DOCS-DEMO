@@ -1,0 +1,75 @@
+# Table of contents
+# Learn more at https://jupyterbook.org/customize/toc.html
+
+format: jb-book
+root: intro
+parts:
+- caption: SLM-MX
+  chapters:
+  - file: SLM-MX/index
+    title: Getting Started
+  - file: SLM-MX/device/index
+    title: Device Setup
+    sections:
+    - file: SLM-MX/device/led-status
+    - file: SLM-MX/device/factory-reset
+    - file: SLM-MX/device/firmware-update
+    - file: SLM-MX/device/slot-mismatch
+    - file: SLM-MX/device/modbus-watchdog
+  - file: SLM-MX/configurator/index
+    title: Configurator Software
+    sections:
+    - file: SLM-MX/configurator/scanning-for-device
+    - file: SLM-MX/configurator/configuring-modules
+    - file: SLM-MX/configurator/system-config
+    - file: SLM-MX/configurator/modbus-addresses
+    - file: SLM-MX/configurator/offline-configuration
+    - file: SLM-MX/configurator/firmware-update
+  - file: SLM-MX/example-projects/index
+    title: Example Projects
+    sections:
+    - file: SLM-MX/example-projects/codesys/codesys-demo
+    - file: SLM-MX/example-projects/python/python-demo
+    - file: SLM-MX/example-projects/arduino/arduino-demo
+    - file: SLM-MX/example-projects/openplc/openplc-demo
+    - file: SLM-MX/example-projects/productivity/productivity-demo
+- caption: I/O Modules
+  chapters:
+  - file: modules/index
+    title: Modules Overview
+  - file: modules/discrete-input/index
+    title: Discrete Input Modules
+    sections:
+    - file: modules/discrete-input/SLM-DCI-16NP
+    - file: modules/discrete-input/SLM-ACDCI-16NP
+    - file: modules/discrete-input/SLM-ACI-8
+    - file: modules/discrete-input/SLM-SIM-8
+  - file: modules/discrete-output/index
+    title: Discrete Output Modules
+    sections:
+    - file: modules/discrete-output/SLM-DCO-15N
+    - file: modules/discrete-output/SLM-DCO-15P
+    - file: modules/discrete-output/SLM-RLY-16
+    - file: modules/discrete-output/SLM-RLY-8-ISO
+  - file: modules/discrete-combo/index
+    title: Discrete Combination Modules
+    sections:
+    - file: modules/discrete-combo/SLM-ACDCI-8NP-RLY8
+    - file: modules/discrete-combo/SLM-DCI-8NP-DCO-7N
+    - file: modules/discrete-combo/SLM-DCI-8NP-DCO-7P
+  - file: modules/analog-input/index
+    title: Analog Input Modules
+    sections:
+    - file: modules/analog-input/SLM-AI-8-mA
+    - file: modules/analog-input/SLM-AI-8-V
+    - file: modules/analog-input/SLM-THM-4
+  - file: modules/analog-output/index
+    title: Analog Output Modules
+    sections:
+    - file: modules/analog-output/SLM-AO-8-mA
+    - file: modules/analog-output/SLM-AO-8-V
+  - file: modules/analog-combo/index
+    title: Analog Combination Modules
+    sections:
+    - file: modules/analog-combo/SLM-AI4-AO2-mA
+    - file: modules/analog-combo/SLM-AI4-AO2-V

@@ -1,0 +1,78 @@
+PROGRAM PLC_PRG
+VAR
+	Relays : ARRAY [0..15] OF BOOL;
+	Relay1 : BYTE;
+	Relay2 : BYTE;
+    i : INT; //Loop Counter
+	
+	// Variables to track changes and status
+    Relay1_Previous : BYTE;
+    Relay2_Previous : BYTE;
+	
+	AnalogInputs : ARRAY[0..7] OF WORD;
+	
+	THMCH1 AT %IW0 : REAL;
+	THMCH2 AT %IW2 : REAL;
+	
+	// New variables for temperature bar indicator
+	MinTemp : REAL := 75.0;
+	MaxTemp : REAL := 125.0;
+	TempPercentage : REAL;
+	ActiveRelays : INT;
+END_VAR
+
+VAR_OUTPUT
+	xBusy : BOOL;
+	xDone : BOOL;
+	xError : BOOL;
+	ModbusError : MB_ErrorCodes;
+END_VAR
+
+// Reset Relays array every cycle
+FOR i := 0 TO 15 DO
+  Relays[i] := FALSE;
+END_FOR;
+
+// Calculate temperature percentage (0-100%)
+IF THMCH1 <= MinTemp THEN
+    TempPercentage := 0.0;
+ELSIF THMCH1 >= MaxTemp THEN
+    TempPercentage := 100.0;
+ELSE
+    TempPercentage := (THMCH1 - MinTemp) * 100.0 / (MaxTemp - MinTemp);
+END_IF;
+
+// Calculate how many relays should be active (0-16)
+ActiveRelays := REAL_TO_INT(TempPercentage * 16.0 / 100.0);
+
+// Set the active relays
+FOR i := 0 TO 15 DO
+    IF i < ActiveRelays THEN
+        Relays[15-i] := TRUE;
+    ELSE
+        Relays[15-i] := FALSE;
+    END_IF;
+END_FOR;
+
+// Convert the Relays array to a byte for Relay1
+Relay1 := 0; // Reset Relay1
+Relay2 := 0;
+// Map Relays array to Relay1 byte
+FOR i := 0 TO 7 DO
+    IF Relays[i] THEN
+        Relay1 := Relay1 OR (SHL(1, i)); // Set the corresponding bit in Relay1
+    END_IF;
+END_FOR;
+
+FOR i := 8 TO 15 DO
+	IF Relays[i] THEN
+        Relay2 := Relay2 OR (SHL(1, (i-8))); // Set the corresponding bit in Relay1
+    END_IF;
+END_FOR;
+
+// Check if we need to write due to changes
+IF Relay1 <> Relay1_Previous OR Relay2 <> Relay2_Previous THEN
+   	GVL.EnableModbusWrite := TRUE;
+    Relay1_Previous := Relay1;  // Update previous values
+    Relay2_Previous := Relay2;
+END_IF

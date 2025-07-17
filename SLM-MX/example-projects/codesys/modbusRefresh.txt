@@ -1,0 +1,33 @@
+PROGRAM ModbusRefresh
+VAR
+	MyModbusWrite : FB_ModbusHandler;
+    MyModbusRead : FB_ModbusHandler;
+	MyModbusReadStatus : FB_ModbusHandler;
+END_VAR
+
+MyModbusWrite(
+    xEnable := GVL.EnableModbusWrite,
+    iChannelIndex := GVL.WriteChannelIndex,
+);
+
+MyModbusRead(
+	xEnable := GVL.EnableModbusRead,
+	iChannelIndex := GVL.ReadChannelIndex,
+);
+
+MyModbusReadStatus(
+	xEnable := GVL.EnableModbusStatus,
+	iChannelIndex := GVL.ReadChannelIndex,
+);
+
+IF MyModbusWrite.xDone OR MyModbusWrite.xError THEN
+   GVL.EnableModbusWrite := FALSE;
+END_IF
+
+IF MyModbusRead.xDone OR MyModbusRead.xError THEN
+   GVL.EnableModbusRead := FALSE;
+END_IF
+
+IF MyModbusReadStatus.xDone OR MyModbusReadStatus.xError THEN
+   GVL.EnableModbusStatus := FALSE;
+END_IF

@@ -1,0 +1,76 @@
+FUNCTION_BLOCK FB_ModbusHandler
+VAR_INPUT
+	xEnable : BOOL;  //Enable Modbus communication
+    iChannelIndex : INT; // Specify the Modbus channel index
+END_VAR
+VAR_OUTPUT
+	xBusy : BOOL;
+    xDone : BOOL;
+    xError : BOOL;
+    ModbusError : MB_ErrorCodes;
+END_VAR
+VAR
+    CurrentState : ModbusState_Type := ModbusState_Type.Idle;
+    MyChannelControl : ModbusChannel;
+    xExecute : BOOL := FALSE;
+    OperationPending : BOOL := FALSE;
+END_VAR 
+
+CASE CurrentState OF
+    ModbusState_Type.Idle:  // Corrected: Refer to DUT members
+        xBusy := FALSE;
+        xDone := FALSE;
+        xError := FALSE;
+        xExecute := FALSE;  // Reset execute flag in idle state
+
+        IF xEnable THEN
+            CurrentState := ModbusState_Type.StartOperation;  // Corrected: Refer to DUT members
+            OperationPending := FALSE; // Reset flag
+        END_IF
+
+    ModbusState_Type.StartOperation:
+        xBusy := TRUE;
+        xExecute := TRUE;  // Set execute TRUE when starting operation
+        
+        MyChannelControl(
+            slave := Modbus_TCP_Server,
+            xExecute := xExecute,
+            iChannelIndex := iChannelIndex,
+            xAbort := FALSE
+        );
+
+        IF MyChannelControl.xBusy THEN  // Only move to wait state when operation has started
+            CurrentState := ModbusState_Type.WaitForCompletion;
+        END_IF
+
+    ModbusState_Type.WaitForCompletion:
+        xExecute := FALSE;  // Clear execute after operation starts
+        
+        MyChannelControl(
+            slave := Modbus_TCP_Server,
+            xExecute := xExecute,
+            iChannelIndex := iChannelIndex,
+            xAbort := FALSE
+        );
+		xBusy := MyChannelControl.xBusy;
+        
+		IF NOT MyChannelControl.xBusy THEN  // Operation is complete when busy goes false
+            IF MyChannelControl.xError THEN
+                xDone := FALSE;
+                xError := TRUE;
+                ModbusError := MyChannelControl.ModbusError;
+                CurrentState := ModbusState_Type.ErrorState;
+            ELSE
+                xDone := TRUE;
+                xError := FALSE;
+                CurrentState := ModbusState_Type.Idle;
+            END_IF
+            OperationPending := FALSE;
+        END_IF
+
+    ModbusState_Type.ErrorState:
+        xBusy := FALSE;
+        xDone := FALSE;
+        xError := TRUE;
+        CurrentState := ModbusState_Type.Idle;
+END_CASE 

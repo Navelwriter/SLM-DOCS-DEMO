@@ -1,0 +1,11 @@
+VAR_GLOBAL
+	EnableModbusWrite : BOOL := FALSE;
+	EnableModbusRead : BOOL := FALSE;
+	EnableModbusStatus : BOOL := FALSE;
+    WriteChannelIndex : INT;  // Set by application
+    ReadChannelIndex : INT;   // Set by application
+	StatusChannelIndex : INT;
+	
+	THM_CH : ARRAY [0..7] OF WORD;
+	THM_STATUS : ARRAY [0..13] OF WORD;
+END_VAR 
