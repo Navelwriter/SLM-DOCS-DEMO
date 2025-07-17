@@ -41,7 +41,7 @@
 
 During a communication failure and the watchdog timer is triggered, the module will output the value set in the **Analog Timeout Value** field.
 
-See **[Watchdog Timer](modbus-watchdog)** for more information.
+See **[Watchdog Timer](watchdog-timer)** for more information.
 ```
 
 ---

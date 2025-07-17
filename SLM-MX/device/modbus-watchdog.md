@@ -1,3 +1,4 @@
+(watchdog-timer)=
 # Watchdog Timer
 
 This feature protects your device by pausing its normal operations if it doesn’t receive any commands within a set period of time. In other words, if the device goes too long without any Modbus commands (a communication standard), it stops processing certain tasks and sends back an error response (exception code `0x07`) for any further requests.
