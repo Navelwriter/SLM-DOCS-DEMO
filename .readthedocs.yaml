@@ -14,9 +14,16 @@ build:
 
 python:
    install:
-   - requirements: docs/requirements.txt
-#   - method: pip
-#     path: .
+    - method: pip
+      path: .
+      extra_requirements:
+      - sphinx
+    - requirements: ./requirements.txt
+
+sphinx:
+  configuration: docs/conf.py
+  builder: html
+  fail_on_warning: true
 
 formats:
   - pdf
